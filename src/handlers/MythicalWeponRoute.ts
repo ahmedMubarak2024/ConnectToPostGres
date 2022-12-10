@@ -33,11 +33,11 @@ const destroy = async (req: Request, res: Response) => {
     res.json(deleted)
 }
 //here we are passing app from main server 
-const articleRoutes = (app: express.Application) => {
+const weaponsRoutes = (app: express.Application) => {
   app.get('/weapons', index)
   app.get('/weapons/:id', show)
   app.post('/weapons', create)
   app.delete('/weapons', destroy)
 }
 
-export default articleRoutes
+export default weaponsRoutes
