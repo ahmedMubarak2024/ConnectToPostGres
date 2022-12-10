@@ -1,5 +1,6 @@
 import express, { Request, Response } from 'express'
 import bodyParser from 'body-parser'
+import articleRoutes from './handlers/MythicalWeponRoute'
 
 
 const app: express.Application = express()
@@ -14,3 +15,7 @@ app.get('/', function (req: Request, res: Response) {
 app.listen(3000, function () {
     console.log(`starting app on: ${address}`)
 })
+
+articleRoutes(app)
+
+
