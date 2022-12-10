@@ -5,4 +5,4 @@ name VARCHAR,
 password VARCHAR
 );
 
-INSERT INTO user_identity (name, password) VALUES('ahmed','password');
+INSERT INTO user_identity (name, password) VALUES('testUser','password');

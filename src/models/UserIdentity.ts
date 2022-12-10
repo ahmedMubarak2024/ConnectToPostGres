@@ -40,15 +40,20 @@ export class UserIdentityStore{
 
     async create(user:UserIdentity): Promise<UserIdentity>{
         try{
+            if(user.name==null || user.password ==null){
+            throw new Error("bad Data")
+            }
+
             const connection = await client.connect()
+            
             const hash = bcrypt.hashSync(
                 user.password + BCRYPT_PASSWORD, 
                 parseInt(SALT_ROUNDS as string)
              );
-             console.log("Password before "+user.password+" has been "+hash);
+           //  console.log("Password before "+user.password+" has been "+hash);
             user.password= hash.toString()
             const sql = 'INSERT INTO user_identity ( name , password ) VALUES ($1 , $2)   RETURNING *'
-            console.log(sql);
+         //   console.log(sql);
             const result = await connection.query(sql,[user.name, user.password])
             
             connection.release()
@@ -75,11 +80,12 @@ export class UserIdentityStore{
     async auth(username:string,password:string): Promise<UserIdentity|null>{
         try{
             const connection = await client.connect()
-            const result = await connection.query('SELECT * FROM user_identity WHERE name = '+username)
+            const result = await connection.query('SELECT * FROM user_identity WHERE name =$1 ',[username])
             connection.release()
             if(result.rowCount>0){
                 const user = result.rows[0];
-                if(bcrypt.compareSync(password +BCRYPT_PASSWORD,user.password))
+                console.log(password+BCRYPT_PASSWORD +" "+user.password)
+                if(bcrypt.compareSync(password+BCRYPT_PASSWORD,user.password))
                 return user
                 else return null
             }else return null
@@ -91,8 +97,8 @@ export class UserIdentityStore{
     }
 }
 
-// new UserIdentityStore().index().then((result:UserIdentity[]) => {
-//     console.log(result);
+new UserIdentityStore().index().then((result:UserIdentity[]) => {
+    console.log(result);
     
-// })
+})
 // new UserIdentityStore().create({name:"new User", password:"TestPasswordChange"})
